@@ -1,4 +1,4 @@
-package com.hl7mmgvalidator
+package com.hl7mmgvalidator.loadervocab
 
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*

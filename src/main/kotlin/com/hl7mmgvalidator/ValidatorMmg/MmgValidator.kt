@@ -1,6 +1,8 @@
 package com.hl7mmgvalidator.validatormmg
 
 import com.hl7mmgvalidator.*
+import com.hl7mmgvalidator.loadermmg.*
+import com.hl7mmgvalidator.loadervocab.*
 
 // import gov.cdc.dex.azure.RedisProxy
 // import gov.cdc.dex.hl7.exception.InvalidConceptKey

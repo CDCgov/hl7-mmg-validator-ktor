@@ -6,6 +6,11 @@ import io.ktor.server.routing.*
 
 import io.ktor.server.request.*
 import com.hl7mmgvalidator.validatormmg.*
+import com.hl7mmgvalidator.loadermmg.*
+import com.hl7mmgvalidator.loadervocab.*
+
+import com.google.gson.Gson
+
 
 fun Application.configureRouting() {
     routing {
@@ -20,7 +25,6 @@ fun Application.configureRouting() {
             // Dependency 1: Get the respective MMG as needed from the message
             // *************************************************************************
             val loaderMmg: LoaderMmg = LoaderMmgImpl()
-            val mmgType = "mmgs/genv2.json" // TODO: mmgType should come from reading the message
 
             // *************************************************************************
             // Dependency 2: Get the PhinVads Vocab
@@ -48,7 +52,10 @@ fun Application.configureRouting() {
                 // *************************************************************************
                 val validationReport = validatorMmg.validate(hl7Text)
 
-                call.respondText(validationReport.toString())
+                val mmg = loaderMmg.getGenV2Mmg().blocks
+
+                val serializedJson = Gson().toJson(mmg)
+                call.respond(serializedJson)
             } catch (e: Exception) {
                 // return error
                 call.respondText("Error: ${e.message}")
