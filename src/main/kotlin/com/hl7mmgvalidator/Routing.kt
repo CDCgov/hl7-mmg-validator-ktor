@@ -29,7 +29,7 @@ fun Application.configureRouting() {
 
             try {
                 val mmgJson = loaderMmg.getMmg(mmgType)
-                val vocabJson = loaderVocab.getVocab()
+                val vocabList = loaderVocab.getVocabOnce()
 
                 // *************************************************************************
                 // Read the body of the POST request as text
@@ -38,7 +38,7 @@ fun Application.configureRouting() {
                 log.info("Received body: $hl7Text")
 
 
-                call.respondText(vocabJson)
+                call.respondText(vocabList.toString())
             } catch (e: Exception) {
                 // return error
                 call.respondText("Error: ${e.message}")

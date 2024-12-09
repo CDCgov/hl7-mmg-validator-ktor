@@ -1,3 +1,12 @@
-{
-    "phinvads": "TODO"
-}
+[
+    { "code": "Y", "description": "Yes", "source": "CDC" },
+    { "code": "N", "description": "No", "source": "CDC" },
+    { "code": "UNK", "description": "Unknown", "source": "NULLFL" },
+    { "code": "M", "description": "Male", "source": "CDC" },
+    { "code": "F", "description": "Female", "source": "CDC" },
+    { "code": "U", "description": "Unknown", "source": "NULLFL" },
+    { "code": "2135-2", "description": "Hispanic or Latino", "source": "CDC" },
+    { "code": "2186-5", "description": "Not Hispanic or Latino", "source": "CDC" },
+    { "code": "OTH", "description": "other", "source": "NULLFL" },
+    { "code": "UNK", "description": "unknown", "source": "NULLFL" }
+]
