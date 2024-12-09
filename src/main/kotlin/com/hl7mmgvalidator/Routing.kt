@@ -5,6 +5,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 import io.ktor.server.request.*
+import com.hl7mmgvalidator.validatormmg.*
 
 fun Application.configureRouting() {
     routing {
@@ -28,8 +29,8 @@ fun Application.configureRouting() {
           
 
             try {
-                val mmgJson = loaderMmg.getMmg(mmgType)
-                val vocabList = loaderVocab.getVocabOnce()
+                // val mmgJson = loaderMmg.getMmg(mmgType)
+                // val vocabList = loaderVocab.getVocabOnce()
 
                 // *************************************************************************
                 // Read the body of the POST request as text
@@ -37,8 +38,17 @@ fun Application.configureRouting() {
                 val hl7Text = call.receiveText()
                 log.info("Received body: $hl7Text")
 
+                // *************************************************************************
+                // Load the MMG Validator with dependencies 1 and 2
+                // *************************************************************************
+                val validatorMmg = MmgValidator(loaderMmg, loaderVocab)
 
-                call.respondText(vocabList.toString())
+                // *************************************************************************
+                // MMG Validation Report 
+                // *************************************************************************
+                val validationReport = validatorMmg.validate(hl7Text)
+
+                call.respondText(validationReport.toString())
             } catch (e: Exception) {
                 // return error
                 call.respondText("Error: ${e.message}")

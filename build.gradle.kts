@@ -29,4 +29,6 @@ dependencies {
     testImplementation(libs.kotlin.test.junit)
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("com.google.code.gson:gson:2.11.0") // Add Gson
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8") // Existing dependency for Java 8+
 }
