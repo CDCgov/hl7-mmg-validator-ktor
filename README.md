@@ -1,3 +1,11 @@
+# HL7 MMG Validator with Ktor Example
+
+Example of HL7 MMG validation
+
+MMG Validation based from: https://github.com/CDCgov/data-exchange-hl7/tree/develop/deprecated/fn-mmg-based-transformer 
+
+Repo created with Ktor sample
+
 # ktor-sample
 
 This project was created using the [Ktor Project Generator](https://start.ktor.io).
