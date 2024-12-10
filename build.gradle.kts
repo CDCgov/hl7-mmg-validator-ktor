@@ -31,4 +31,5 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("com.google.code.gson:gson:2.11.0") // Add Gson
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8") // Existing dependency for Java 8+
+    implementation("gov.cdc:hl7-pet_2.13:1.2.11") // Add HL7 Pet
 }

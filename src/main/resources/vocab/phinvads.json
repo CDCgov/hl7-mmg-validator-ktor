@@ -1,12 +1,349 @@
-[
-    { "code": "Y", "description": "Yes", "source": "CDC" },
-    { "code": "N", "description": "No", "source": "CDC" },
-    { "code": "UNK", "description": "Unknown", "source": "NULLFL" },
-    { "code": "M", "description": "Male", "source": "CDC" },
-    { "code": "F", "description": "Female", "source": "CDC" },
-    { "code": "U", "description": "Unknown", "source": "NULLFL" },
-    { "code": "2135-2", "description": "Hispanic or Latino", "source": "CDC" },
-    { "code": "2186-5", "description": "Not Hispanic or Latino", "source": "CDC" },
-    { "code": "OTH", "description": "other", "source": "NULLFL" },
-    { "code": "UNK", "description": "unknown", "source": "NULLFL" }
-]
+{
+    "PHVS_YesNoUnknown_CDC": [
+        {
+            "code": "Y",
+            "description": "Yes",
+            "source": "CDC"
+        },
+        {
+            "code": "N",
+            "description": "No",
+            "source": "CDC"
+        },
+        {
+            "code": "UNK",
+            "description": "Unknown",
+            "source": "NULLFL"
+        }
+    ],
+    "PHVS_Sex_MFU": [
+        {
+            "code": "M",
+            "description": "Male",
+            "source": "CDC"
+        },
+        {
+            "code": "F",
+            "description": "Female",
+            "source": "CDC"
+        },
+        {
+            "code": "U",
+            "description": "Unknown",
+            "source": "NULLFL"
+        }
+    ],
+    "PHVS_EthnicityGroup_CDC_Unk": [
+        {
+            "code": "2135-2",
+            "description": "Hispanic or Latino",
+            "source": "CDC"
+        },
+        {
+            "code": "2186-5",
+            "description": "Not Hispanic or Latino",
+            "source": "CDC"
+        },
+        {
+            "code": "OTH",
+            "description": "other",
+            "source": "NULLFL"
+        },
+        {
+            "code": "UNK",
+            "description": "unknown",
+            "source": "NULLFL"
+        }
+    ],
+    "PHVS_RaceCategory_CDC_NullFlavor": [
+        {
+            "code": "1002-5",
+            "description": "American Indian or Alaska Native",
+            "source": "CDC"
+        },
+        {
+            "code": "2028-9",
+            "description": "Asian",
+            "source": "CDC"
+        },
+        {
+            "code": "ASKU",
+            "description": "asked but unknown",
+            "source": "NULLFL"
+        },
+        {
+            "code": "2054-5",
+            "description": "Black or African American",
+            "source": "CDC"
+        },
+        {
+            "code": "2076-8",
+            "description": "Native Hawaiian or Other Pacific Islander",
+            "source": "CDC"
+        },
+        {
+            "code": "NI",
+            "description": "NoInformation",
+            "source": "NULLFL"
+        },
+        {
+            "code": "NASK",
+            "description": "not asked",
+            "source": "NULLFL"
+        },
+        {
+            "code": "2131-1",
+            "description": "Other Race",
+            "source": "CDC"
+        },
+        {
+            "code": "PHC1175",
+            "description": "Refused to answer",
+            "source": "PHVS"
+        },
+        {
+            "code": "UNK",
+            "description": "unknown",
+            "source": "CDC"
+        },
+        {
+            "code": "2106-3",
+            "description": "White",
+            "source": "CDC"
+        }
+    ],
+    "PHVS_DurationUnit_CDC": [
+        {
+            "code": "d",
+            "description": "day [time]",
+            "source": "UCUM"
+        },
+        {
+            "code": "h",
+            "description": "hour [time]",
+            "source": "UCUM"
+        },
+        {
+            "code": "min",
+            "description": "minute [time]",
+            "source": "UCUM"
+        },
+        {
+            "code": "mo",
+            "description": "month [time]",
+            "source": "UCUM"
+        },
+        {
+            "code": "s",
+            "description": "second [time]",
+            "source": "UCUM"
+        },
+        {
+            "code": "UNK",
+            "description": "unknown",
+            "source": "NULLFL"
+        },
+        {
+            "code": "wk",
+            "description": "week [time]",
+            "source": "UCUM"
+        },
+        {
+            "code": "a",
+            "description": "year [time]",
+            "source": "UCUM"
+        }
+    ],
+    "PHVS_DiseaseAcquiredJurisdiction_NND": [
+        {
+            "code": "PHC244",
+            "display": "Indigenous",
+            "system": "CDC"
+        },
+        {
+            "code": "C1512888",
+            "display": "International",
+            "system": "CDC"
+        },
+        {
+            "code": "PHC245",
+            "display": "In State,Out of jurisdiction",
+            "system": "CDC"
+        },
+        {
+            "code": "PHC246",
+            "display": "Out of state",
+            "system": "CDC"
+        },
+        {
+            "code": "UNK",
+            "display": "Unknown",
+            "system": "NULLFL"
+        },
+        {
+            "code": "PHC1274",
+            "display": "Yes imported, but not able to determine source state and/or country",
+            "system": "CDC"
+        }
+    ],
+    "PHVS_CaseClassStatus_NND": [
+        {
+            "code": "410605003",
+            "display": "Confirmed present",
+            "system": "CDC"
+        },
+        {
+            "code": "PHC178",
+            "display": "Not a Case",
+            "system": "CDC"
+        },
+        {
+            "code": "2931005",
+            "display": "Probable diagnosis",
+            "system": "CDC"
+        },
+        {
+            "code": "415684004",
+            "display": "Suspected",
+            "system": "CDC"
+        },
+        {
+            "code": "UNK",
+            "display": "Unknown",
+            "system": "NULLFL"
+        }
+    ],
+    "PHVS_CaseTransmissionMode_NND": [
+        {
+            "code": "416380006",
+            "display": "Airborne transmission",
+            "system": "CDC"
+        },
+        {
+            "code": "409700000",
+            "display": "Animal to human transmission",
+            "system": "CDC"
+        },
+        {
+            "code": "420014008",
+            "display": "Blood borne transmission",
+            "system": "CDC"
+        },
+        {
+            "code": "461551000124100",
+            "display": "Droplet transmission",
+            "system": "CDC"
+        },
+        {
+            "code": "416086007",
+            "display": "Food-borne transmission",
+            "system": "CDC"
+        },
+        {
+            "code": "418375005",
+            "display": "Indeterminate disease transmission mode",
+            "system": "CDC"
+        },
+        {
+            "code": "PHC142",
+            "display": "Mechanical",
+            "system": "CDC"
+        },
+        {
+            "code": "416085006",
+            "display": "Nosocomial transmission",
+            "system": "CDC"
+        },
+        {
+            "code": "OTH",
+            "display": "Other",
+            "system": "NULLFL"
+        },
+        {
+            "code": "417564009",
+            "display": "Sexual transmission",
+            "system": "CDC"
+        },
+        {
+            "code": "420193003",
+            "display": "Transdermal transmission",
+            "system": "CDC"
+        },
+        {
+            "code": "417409004",
+            "display": "Transplacental transmission",
+            "system": "CDC"
+        },
+        {
+            "code": "418427004",
+            "display": "Vector-borne transmission",
+            "system": "CDC"
+        },
+        {
+            "code": "418117003",
+            "display": "Water-borne transmission",
+            "system": "CDC"
+        }
+    ],
+    "PHVS_ResultStatus_NND": [
+        {
+            "code": "F",
+            "display": "Final results; Can only be changed with a corrected result",
+            "system": "HL7"
+        },
+        {
+            "code": "C",
+            "display": "Record coming over is a correction and thus replaces a final result",
+            "system": "HL7"
+        },
+        {
+            "code": "X",
+            "display": "Results cannot be obtained for this observation",
+            "system": "HL7"
+        }
+    ],
+    "PHVS_BinationalReportingCriteria_CDC": [
+        {
+            "code": "PHC1140",
+            "display": "Exposure to suspected product from Canada or Mexico",
+            "system": "CDC"
+        },
+        {
+            "code": "PHC1139",
+            "display": "Has case contacts in or from Mexico or Canada",
+            "system": "CDC"
+        },
+        {
+            "code": "PHC1141",
+            "display": "Other situations that may require binational notification or coordination of response",
+            "system": "CDC"
+        },
+        {
+            "code": "PHC1215",
+            "display": "Potentially exposed by a resident of Mexico or Canada",
+            "system": "CDC"
+        },
+        {
+            "code": "PHC1137",
+            "display": "Potentially exposed while in Mexico or Canada",
+            "system": "CDC"
+        },
+        {
+            "code": "PHC1138",
+            "display": "Resident of Canada or Mexico",
+            "system": "CDC"
+        }
+    ],
+    "PHVS_TemperatureUnit_UCUM": [
+        {
+            "code": "Cel",
+            "display": "degree Celsius [temperature]",
+            "system": "UCUM"
+        },
+        {
+            "code": "[degF]",
+            "display": "degree Fahrenheit [temperature]",
+            "system": "UCUM"
+        }
+    ]
+}

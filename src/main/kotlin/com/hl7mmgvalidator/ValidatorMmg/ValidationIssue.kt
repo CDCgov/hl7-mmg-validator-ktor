@@ -34,7 +34,7 @@ data class ValidationIssue(
     val classification: ValidationIssueCategoryType,         // ERROR (for required fields) or WARNING
     val category: ValidationIssueType,                  // DATA_TYPE, CARDINALITY, VOCAB
     val fieldName: String,                          // mmg field Name
-    val path: String,                            // HL7 path to extract value
+    val path: String?, // TODO: ?                           // HL7 path to extract value
     val line: Int,
     val errorMessage: ValidationErrorMessage,        // error message
     val description: String,                            // custom message to add value in question

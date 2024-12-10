@@ -52,11 +52,9 @@ fun Application.configureRouting() {
                 // *************************************************************************
                 val validationReport = validatorMmg.validate(hl7Text)
 
-                val mmg = loaderMmg.getGenV2Mmg().blocks
-
-                val serializedJson = Gson().toJson(mmg)
-                call.respond(serializedJson)
+                call.respond(Gson().toJson(validationReport))
             } catch (e: Exception) {
+                
                 // return error
                 call.respondText("Error: ${e.message}")
             }// .try-catch

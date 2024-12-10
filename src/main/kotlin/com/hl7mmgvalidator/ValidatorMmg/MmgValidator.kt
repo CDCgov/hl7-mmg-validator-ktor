@@ -4,53 +4,44 @@ import com.hl7mmgvalidator.*
 import com.hl7mmgvalidator.loadermmg.*
 import com.hl7mmgvalidator.loadervocab.*
 
-// import gov.cdc.dex.azure.RedisProxy
-// import gov.cdc.dex.hl7.exception.InvalidConceptKey
-// import gov.cdc.dex.hl7.model.*
-// import gov.cdc.dex.mmg.MmgUtil
-// import gov.cdc.dex.redisModels.Element
-// import gov.cdc.dex.redisModels.MMG
-// import redis.clients.jedis.Jedis
+// import org.slf4j.LoggerFactory
+import gov.cdc.hl7.HL7StaticParser
+import scala.Option
 
 
-import org.slf4j.LoggerFactory
-// import gov.cdc.hl7.HL7StaticParser
-// import scala.Option
-
-
-class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
+class MmgValidator(private val loaderMmg: LoaderMmg, private val loaderVocab: LoaderVocab) {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(MmgValidator::class.java.simpleName)
-        // const val GENVx_PROFILE_PATH = "MSH-21[2].1"
-        // const val CONDITION_PROFILE_PATH = "MSH-21[3].1"
-        // const val EVENT_CODE_PATH = "OBR[1]-31.1"
-        // const val REPORTING_JURISDICTION_PATH = "OBX[@3.1='77968-6']-5.1"
-        // const val ALT_REPORTING_JURISDICTION_PATH = "OBX[@3.1='NOT116']-5.1"
-        // val DATE_DATA_TYPES = listOf("DT", "DTM", "TS")
-        // const val MMWR_YEAR_CODE = "77992-6"
-        // const val MMWR_YEAR_LEGACY_CODE = "INV166"
-        // const val MMWR_WEEK_CODE = "77991-8"
-        // const val MMWR_WEEK_LEGACY_CODE = "INV165"
-    }
-    // private val REDIS_VOCAB_NAMESPACE = "vocab:"
-
-    // private val mmgUtil = MmgUtil(redisProxy)
-
+        // private val logger = LoggerFactory.getLogger(MmgValidator::class.java.simpleName)
+        const val GENVx_PROFILE_PATH = "MSH-21[2].1"
+        const val CONDITION_PROFILE_PATH = "MSH-21[3].1"
+        const val EVENT_CODE_PATH = "OBR[1]-31.1"
+        const val REPORTING_JURISDICTION_PATH = "OBX[@3.1='77968-6']-5.1"
+        const val ALT_REPORTING_JURISDICTION_PATH = "OBX[@3.1='NOT116']-5.1"
+        val DATE_DATA_TYPES = listOf("DT", "DTM", "TS")
+        const val MMWR_YEAR_CODE = "77992-6"
+        const val MMWR_YEAR_LEGACY_CODE = "INV166"
+        const val MMWR_WEEK_CODE = "77991-8"
+        const val MMWR_WEEK_LEGACY_CODE = "INV165"
+    }// .companion object 
 
     fun validate(hl7Message: String): List<ValidationIssue> {
         // val mmgs = getMMGFromMessage(hl7Message)
+        val mmg = loaderMmg.getGenV2Mmg()
+        val mmgs = arrayOf<MMG>(mmg)
+
         val report = mutableListOf<ValidationIssue>()
 
-        // validateMMGRules(hl7Message, mmgs, report)
-        // validateOtherSegments(hl7Message, mmgs, report)
+        validateMMGRules(hl7Message, mmgs, report)
+        validateOtherSegments(hl7Message, mmgs, report)
         return report
     }// .validate
-/* 
+
+
     private fun validateMMGRules(hl7Message: String, mmgs: Array<MMG>, report: MutableList<ValidationIssue>) {
         //  val allBlocks:Int  =  mmgs.map { it.blocks.size }.sum()
          // logger.debug("validate started blocks.size: --> $allBlocks")
-         redisProxy.getJedisClient().use { jedisConn ->
+        //  redisProxy.getJedisClient().use { jedisConn ->
             mmgs.forEach { mmg ->
                 mmg.blocks.forEach { block ->
                     block.elements.forEach { element ->
@@ -82,7 +73,7 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
                             if (msgSegments.isDefined) {
                                 val msgValues = HL7StaticParser.getValue(hl7Message, element.getValuePath())
                                 if (msgValues.isDefined) {
-                                    checkVocab(element, msgValues.get(), hl7Message, report, jedisConn)
+                                    checkVocab(element, msgValues.get(), hl7Message, report)
                                     if (element.mappings.hl7v251.dataType in DATE_DATA_TYPES) {
                                         this.checkDateContent(element, msgValues.get(), hl7Message, report)
                                     } else if (element.mappings.hl7v251.identifier in listOf(
@@ -98,8 +89,8 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
                     } // .for element
                 } // .for block
             }// .for mmg
-        } //. for use
-    } // .validate
+        // } //. for use
+    } // .validateMMGRules
 
 
     private fun validateObservationSubId(hl7Message: String, blockRepeat: Boolean, element: Element, msgValues: List<String>, report:MutableList<ValidationIssue>) {
@@ -191,7 +182,7 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
                             description="OBX segment identifier $segmentID not found in the MMG.",
                         )
                     } // .if
-                    logger.info("hl7 segmentName: --> " + segmentName + " -- " + "segmentID: --> " + segmentID)
+                    // logger.info("hl7 segmentName: --> " + segmentName + " -- " + "segmentID: --> " + segmentID)
                 } // .OBX
             }
 
@@ -234,7 +225,8 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
             checkSingleGroupCardinality(hl7Message, minCardinality, maxCardinality, null, element, segValues, report)
 
         }
-    }
+    }// .checkCardinality
+
     private fun checkSingleGroupCardinality(hl7Message: String, minCardinality: String, maxCardinality: String, groupID: String?, element: Element, matchingSegs: Option<Array<Array<String>>>, report: MutableList<ValidationIssue>) {
         val values = if (matchingSegs.isDefined) matchingSegs.get().flatten() else listOf()
         if (minCardinality.toInt() > 0 && values.distinct().size < minCardinality.toInt()) {
@@ -274,7 +266,7 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
                 ) // .ValidationIssue
             }
         }
-    } // .checkCardinality 
+    } // .checkSingleGroupCardinality 
 
     private fun checkDataType(element: Element, msgDataType: String?, lineNbr: Int, report: MutableList<ValidationIssue>) {
         if (msgDataType != null && msgDataType != element.mappings.hl7v251.dataType) {
@@ -291,12 +283,12 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
 
     } // .checkDataType
 
-    private fun checkVocab(elem: Element, msgValues: Array<Array<String>>, message: String, report:MutableList<ValidationIssue>,jedisConn:Jedis ) {
+    private fun checkVocab(elem: Element, msgValues: Array<Array<String>>, message: String, report:MutableList<ValidationIssue>) {
         if (!elem.valueSetCode.isNullOrEmpty() && "N/A" != elem.valueSetCode) {
             msgValues.forEachIndexed { outIdx, outArray ->
                 outArray.forEachIndexed { _, inElem ->
                     //if (concepts.filter { it.conceptCode == inElem }.isEmpty()) {
-                    if (!isConceptValid( elem.valueSetCode!!, inElem,jedisConn )) {
+                    if (!isConceptValid( elem.valueSetCode!!, inElem )) {
                         val lineNbr = getLineNumber(message, elem, outIdx)
                         val issue = ValidationIssue(
                             getCategory(elem.mappings.hl7v251.usage),
@@ -312,7 +304,8 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
                 }//.forEach Inner Array
             } //.forEach Outer Array
         }
-    }
+    }// .checkVocab
+    
     private fun checkDateContent(elem: Element, msgValues: Array<Array<String>>, message: String, report:MutableList<ValidationIssue> ) {
         msgValues.forEachIndexed { outIdx, outArray ->
             outArray.forEachIndexed { _, inElem ->
@@ -338,7 +331,7 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
                 }
             }//.forEach Inner Array
         } //.forEach Outer Array
-    }
+    }// .checkDateContent
 
     private fun checkMMWRWeek(elem: Element, msgValues: Array<Array<String>>, message: String, report:MutableList<ValidationIssue> ) {
         msgValues.forEachIndexed { outIdx, outArray ->
@@ -359,16 +352,17 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
                 }
             }//.forEach Inner Array
         } //.forEach Outer Array
-    }
+    }// .checkMMWRWeek
 
-    @Throws(InvalidConceptKey::class)
-    fun isConceptValid(key: String, concept: String,jedisConn:Jedis): Boolean {
-          try {
-              return jedisConn.hexists(REDIS_VOCAB_NAMESPACE + key, concept)
-          } catch (e:Exception){
-              throw InvalidConceptKey("Unable to retrieve concept values for $key")
-          }
-    }
+    // @Throws(InvalidConceptKey::class)
+    fun isConceptValid(key: String, concept: String): Boolean {
+        //   try {
+        //       return jedisConn.hexists(REDIS_VOCAB_NAMESPACE + key, concept)
+        //   } catch (e:Exception){
+        //       throw InvalidConceptKey("Unable to retrieve concept values for $key")
+        //   }
+        return loaderVocab.entryExists(key, concept)
+    }// .isConceptValid
 
     private fun getCategory(usage: String): ValidationIssueCategoryType {
         return when (usage) {
@@ -382,7 +376,8 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
             "OBX" -> "@3.1='${elem.mappings.hl7v251.identifier}'"
             else -> "1"
         }
-    }
+    }// .getSegIdx
+
     private fun getLineNumber(message: String, elem: Element, outArrayIndex: Int): Int {
         val allSegs = HL7StaticParser.getListOfMatchingSegments(message, elem.mappings.hl7v251.segmentType, getSegIdx(elem))
         var line = 0
@@ -393,35 +388,34 @@ class MmgValidator(private val loaderMmg: LoaderMmg, loaderVocab: LoaderVocab) {
             forBreak++
         }
         return line
-    }
+    }// .getLineNumber
 
-    fun getMMGFromMessage(message: String): Array<MMG> {
-        val genVProfile = this.extractValue(message, GENVx_PROFILE_PATH).trim()
-        val conditionProfile = this.extractValue(message, CONDITION_PROFILE_PATH).trim()
-        val eventCode = this.extractValue(message, EVENT_CODE_PATH).trim()
-        var jurisdictionCode = this.extractValue(message,REPORTING_JURISDICTION_PATH).trim()
-        if (jurisdictionCode.isEmpty()) {
-            jurisdictionCode = this.extractValue(message, ALT_REPORTING_JURISDICTION_PATH).trim()
-        }
-        logger.info("Profiles for Message --> GenV2: $genVProfile, Condition Specific: $conditionProfile, Event Code:$eventCode")
-        if (eventCode.isEmpty()) {
-            throw NoSuchElementException("Field $EVENT_CODE_PATH Event Code is missing.")
-        }
-        if (genVProfile.isEmpty()) {
-            throw NoSuchElementException("Field $GENVx_PROFILE_PATH Message Profile is missing.")
-        }
-        if (jurisdictionCode.isEmpty()) {
-            throw NoSuchElementException("Field Jurisdiction Code ($REPORTING_JURISDICTION_PATH or $ALT_REPORTING_JURISDICTION_PATH) is missing.")
-        }
-        return mmgUtil.getMMGs(genVProfile, conditionProfile, eventCode, jurisdictionCode)
-    }
-    private fun extractValue(msg: String, path: String):String  {
-        val value = HL7StaticParser.getFirstValue(msg, path)
-        return if (value.isDefined) value.get() //throw InvalidMessageException("Error extracting $path from HL7 message")
-        else ""
-    }
+    // fun getMMGFromMessage(message: String): Array<MMG> {
+    //     val genVProfile = this.extractValue(message, GENVx_PROFILE_PATH).trim()
+    //     val conditionProfile = this.extractValue(message, CONDITION_PROFILE_PATH).trim()
+    //     val eventCode = this.extractValue(message, EVENT_CODE_PATH).trim()
+    //     var jurisdictionCode = this.extractValue(message,REPORTING_JURISDICTION_PATH).trim()
+    //     if (jurisdictionCode.isEmpty()) {
+    //         jurisdictionCode = this.extractValue(message, ALT_REPORTING_JURISDICTION_PATH).trim()
+    //     }
+    //     logger.info("Profiles for Message --> GenV2: $genVProfile, Condition Specific: $conditionProfile, Event Code:$eventCode")
+    //     if (eventCode.isEmpty()) {
+    //         throw NoSuchElementException("Field $EVENT_CODE_PATH Event Code is missing.")
+    //     }
+    //     if (genVProfile.isEmpty()) {
+    //         throw NoSuchElementException("Field $GENVx_PROFILE_PATH Message Profile is missing.")
+    //     }
+    //     if (jurisdictionCode.isEmpty()) {
+    //         throw NoSuchElementException("Field Jurisdiction Code ($REPORTING_JURISDICTION_PATH or $ALT_REPORTING_JURISDICTION_PATH) is missing.")
+    //     }
+    //     return mmgUtil.getMMGs(genVProfile, conditionProfile, eventCode, jurisdictionCode)
+    // }// .getMMGFromMessage
 
-    */
+    // private fun extractValue(msg: String, path: String):String  {
+    //     val value = HL7StaticParser.getFirstValue(msg, path)
+    //     return if (value.isDefined) value.get() //throw InvalidMessageException("Error extracting $path from HL7 message")
+    //     else ""
+    // }// .extractValue
 
 
 } // .MmgValidator

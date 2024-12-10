@@ -1,55 +1,60 @@
 package com.hl7mmgvalidator.loadervocab
 
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
-
-// Define a data class for vocabulary entries
-@Serializable
-data class VocabularyEntry(
-    val code: String,
-    val description: String,
-    val source: String
-)
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 
 // Interface
 interface LoaderVocab {
 
-    fun getVocabOnce(): List<VocabularyEntry>
-
-    //Check if an entry exists in the vocabulary list based on the code.
-    fun entryExists(code: String): Boolean
-
+    fun entryExists(vocabKey: String, code: String): Boolean
 }// .LoaderVocab
 
-// Implementation to read vocab from a local file with lazy loading
+// vocabulary entries
+data class VocabularyEntry(
+
+    val code: String,
+    val description: String,
+    val source: String
+)// .VocabularyEntry
+
+// Singleton object to hold the vocabulary map
+object VocabSingleton {
+    private var vocabMap: Map<String, List<VocabularyEntry>>? = null
+
+    fun getVocab(): Map<String, List<VocabularyEntry>> {
+
+        if (vocabMap == null) {
+            // Load the vocabulary from the JSON file once
+            val resourcePath = "vocab/phinvads.json"
+            val fileContent = this::class.java.classLoader.getResource(resourcePath)?.readText()
+                ?: throw IllegalArgumentException("Resource not found: $resourcePath")
+
+            val type: Type = object : TypeToken<Map<String, List<VocabularyEntry>>>() {}.type
+            vocabMap = Gson().fromJson(fileContent, type)
+        }// .if
+
+        return vocabMap!!
+    }// .getVocab
+}// .VocabSingleton
+
+// Implementation
 class LoaderVocabImpl : LoaderVocab {
 
-    // Lazy-loaded vocabulary list
-    private val vocabList: List<VocabularyEntry> by lazy {
-        loadVocab()
-    }// .vocabList
+    override fun entryExists(vocabKey: String, code: String): Boolean {
 
-    //Load vocabulary from the JSON file.
-    private fun loadVocab(): List<VocabularyEntry> {
-        val resourcePath = "vocab/phinvads.json"
+        val vocab = VocabSingleton.getVocab()
 
-        val fileContent = this::class.java.classLoader.getResource(resourcePath)?.readText()
-            ?: throw IllegalArgumentException("Resource not found: $resourcePath")
+        // Check key is in the vocab
+        if (!vocab.containsKey(vocabKey)) {
+            return false
+        }// .if
 
-        return Json.decodeFromString(fileContent)
-    }// .loadVocab
-
-    // Return the loaded vocabulary list.
-    override fun getVocabOnce(): List<VocabularyEntry> {
-        return vocabList
-    }// .getVocabOnce
-
-    /**
-     * Check if an entry exists in the vocabulary list based on the code.
-     */
-    override fun entryExists(code: String): Boolean {
-        // Check if any entry matches the given code
-        return vocabList.any { it.code == code }
+        // check entry
+        val entryExists = vocab[vocabKey]?.any { it.code == code } == true
+        // println("Checking if entry exists for key --> $vocabKey, code --> $code, result --> $entryExists")
+        return entryExists
     }// .entryExists
 
 }// .LoaderVocabImpl
+

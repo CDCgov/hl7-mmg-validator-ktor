@@ -1,90 +1,98 @@
 package com.hl7mmgvalidator.loadermmg
 
-import com.google.gson.annotations.SerializedName
+data class MMG (val id: String, val guideStatus: String, val name: String, val shortName: String, var blocks: List<Block>)
 
-// MMG Data Class
-data class MMG(
-    @SerializedName("id") val id: String,
-    @SerializedName("guideStatus") val guideStatus: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("shortName") val shortName: String,
-    @SerializedName("blocks") val blocks: List<Block>
-)
-
-// Block Data Class
 data class Block(
-    @SerializedName("id") val id: String,
-    @SerializedName("ordinal") val ordinal: Int,
-    @SerializedName("type") val type: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("elements") val elements: List<Element>
-)
+    val id: String,
+    val ordinal: Int,
+    val type: String,
+    val name: String,
+    val elements: List<Element>
+)// .Block
 
-// Element Data Class
 data class Element(
-    @SerializedName("ordinal") val ordinal: Int,
-    @SerializedName("name") val name: String,
-    @SerializedName("dataType") val dataType: String,
-    @SerializedName("isUnitOfMeasure") val isUnitOfMeasure: Boolean,
-    @SerializedName("priority") val priority: String,
-    @SerializedName("isRepeat") val isRepeat: Boolean,
-    @SerializedName("repetitions") val repetitions: Int,
-    @SerializedName("mayRepeat") val mayRepeat: String,
-    @SerializedName("valueSetCode") val valueSetCode: String?,
-    @SerializedName("valueSetVersionNumber") val valueSetVersionNumber: Int?,
-    @SerializedName("codeSystem") val codeSystem: String?,
-    @SerializedName("mappings") val mappings: Mapping
-) {
-    val path: String = when (mappings.hl7v251.segmentType) {
+    val ordinal: Int,
+    val name: String,
+    val dataType: String,
+    val isUnitOfMeasure: Boolean,
+    val priority: String,
+    val isRepeat: Boolean,
+    val repetitions: Int,
+    val mayRepeat: String,
+    val valueSetCode: String?,
+    val valueSetVersionNumber: Int?,
+    val codeSystem: String?,
+    val mappings: Mapping,
+
+    ) {
+    fun getSegmentPath() =  when (mappings.hl7v251.segmentType) {
         "OBX" -> {
-            var p = "${mappings.hl7v251.segmentType}[@3.1='${mappings.hl7v251.identifier}']-5"
-            when {
-                mappings.hl7v251.dataType == "CE" || mappings.hl7v251.dataType == "CWE" -> p += ".1"
-                mappings.hl7v251.dataType == "SN" -> p += ".2"
-            }
+            val obxIdentifier = if (mappings.hl7v251.fieldPosition == 6) { //Units o
+                val regex = """[0-9]{5}\-[0-9]""".toRegex()
+                regex.find(mappings.hl7v251.identifier)?.value
+            } else mappings.hl7v251.identifier
+             "${mappings.hl7v251.segmentType}[@3.1='$obxIdentifier']"
+        }
+        "OBR" -> {
+            if (mappings.hl7v251.obrPosition > 0)
+                "${mappings.hl7v251.segmentType}[${mappings.hl7v251.obrPosition}]"
+            else
+                mappings.hl7v251.segmentType
+        }
+
+        else -> {
+            mappings.hl7v251.segmentType
+        }
+    }
+    fun getValuePath() = when (mappings.hl7v251.segmentType) {
+        "OBX" -> {
+            var p ="${getSegmentPath()}-${mappings.hl7v251.fieldPosition}"
+            p += if ("SN" == mappings.hl7v251.dataType) ".2"
+                 else ".1"
             p
         }
-        else -> {
+        "OBR" -> { //take obrPosition into consideration...
+            var path = "${mappings.hl7v251.segmentType}[${mappings.hl7v251.obrPosition}]-${mappings.hl7v251.fieldPosition}"
+            if (mappings.hl7v251.componentPosition != -1)
+                path += ".${mappings.hl7v251.componentPosition}"
+            else if (listOf("CE", "CWE").contains(mappings.hl7v251.dataType)) {
+                path += ".1"
+            }
+            path
+        }
+        else ->  {
             var path = "${mappings.hl7v251.segmentType}-${mappings.hl7v251.fieldPosition}"
             if (mappings.hl7v251.componentPosition != -1)
                 path += ".${mappings.hl7v251.componentPosition}"
-            path
-        }
-    }
-}
-
-// Mapping Data Class
-data class Mapping(
-    @SerializedName("hl7v251") val hl7v251: HL7Mapping
-)
-
-// HL7Mapping Data Class
-data class HL7Mapping(
-    @SerializedName("legacyIdentifier") val legacyIdentifier: String,
-    @SerializedName("identifier") val identifier: String,
-    @SerializedName("dataType") val dataType: String,
-    @SerializedName("segmentType") val segmentType: String,
-    @SerializedName("orbPosition") val orbPosition: Int,
-    @SerializedName("fieldPosition") val fieldPosition: Int,
-    @SerializedName("componentPosition") val componentPosition: Int,
-    @SerializedName("usage") val usage: String,
-    @SerializedName("cardinality") val cardinality: String,
-    @SerializedName("repeatingGroupElementType") val repeatingGroupElementType: String
-) {
-    val path: String = when (segmentType) {
-        "OBX" -> {
-            var p = "$segmentType[@3.1='${identifier}']-5"
-            when {
-                dataType == "CE" || dataType == "CWE" -> p += ".1"
-                dataType == "SN" -> p += ".2"
+            else if (listOf("CE", "CWE").contains(mappings.hl7v251.dataType)) {
+                path += ".1"
             }
-            p
-        }
-        else -> {
-            var path = "$segmentType-$fieldPosition"
-            if (componentPosition != -1)
-                path += ".$componentPosition"
             path
         }
     }
-}
+
+    fun getDataTypePath(): String {
+        val obxIdentifier = if (mappings.hl7v251.fieldPosition == 6) { //Units o
+            val regex = """[0-9]{5}\-[0-9]""".toRegex()
+            regex.find(mappings.hl7v251.identifier)?.value
+        } else mappings.hl7v251.identifier
+        return "${mappings.hl7v251.segmentType}[@3.1='${obxIdentifier}']-2"
+    }
+}// .Element
+
+data class Mapping(
+    val hl7v251: HL7Mapping
+)// .Mapping
+
+data class HL7Mapping (
+    val legacyIdentifier: String,
+    val identifier: String,
+    val dataType: String,
+    val segmentType: String,
+    val obrPosition: Int,
+    val fieldPosition: Int,
+    val componentPosition: Int,
+    val usage: String,
+    val cardinality: String,
+    val repeatingGroupElementType: String
+)// .HL7Mapping
