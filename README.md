@@ -1,12 +1,34 @@
-# HL7 MMG Validator with Ktor Example
-
+# HL7 MMG Validator with Ktor (Example)
 Example of HL7 MMG validation
 
-MMG Validation based from: https://github.com/CDCgov/data-exchange-hl7/tree/develop/deprecated/fn-mmg-based-transformer 
+## Repo Summary
 
-Repo created with Ktor sample
+This repo code contains 4 major parts:
 
-# ktor-sample
+- __HL7 MMG validation code in ValidatorMMg__ package, this is currently the same logic as it was developed here: [data-exchange-hl7/deprecated/fn-mmg-validator](https://github.com/CDCgov/data-exchange-hl7/tree/develop/deprecated/fn-mmg-validator)
+
+- __MMGs__ .json assets loader interface, Dependency 1. The current MMG loader implementation is just as an example, __LoaderMMG__
+   
+- PHINVads __Vocabulary__ interface, Dependency 2. The current Vocab loader implementation is just an example, __LoaderVocab__
+
+- Ktor server is just used an example to produce and visualize the validation report using tools such as postman. This repo was started with the ktor sample project.
+
+## To start the server locally
+
+### Precursory
+- Java SDK, developed with java version "17.0.12" 
+- Kotlinc compiler, developed with info: kotlinc-jvm 2.1.0 (JRE 17.0.12+8-LTS-286)
+- Gradle build tool, developed with Gradle 8.11.1
+
+### VS Code Extensions
+- Extension Pack for Java
+- Gradle for Java, to clean, build, run
+- Kotlin Language
+
+Gradle to clean, build, and run.
+
+## ktor-sample
+[Boiler plate ktor sample project, this code base was started with ktor sample]
 
 This project was created using the [Ktor Project Generator](https://start.ktor.io).
 
