@@ -27,6 +27,13 @@ This repo code contains 4 major parts:
 
 Gradle to clean, build, and run.
 
+### Local Endpoints 
+[GET] http://127.0.0.1:8080
+[POST] http://127.0.0.1:8080/validate 
+
+### POST Example
+![Postman POST to /validate](./docs/post_validate.PNG "Postman POST to /validate")
+
 ## ktor-sample
 [Boiler plate ktor sample project, this code base was started with ktor sample]
 
