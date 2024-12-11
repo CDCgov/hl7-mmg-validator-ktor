@@ -24,4 +24,4 @@
 - Vocab, PHIN VADS, https://phinvads.cdc.gov/vads/SearchVocab.action 
 
 ## Demo
-- MMG Validator, Ktor example project, https://github.com/cosmycx/hl7-mmg-validator-ktor 
+- MMG Validator with Ktor example, this project: https://github.com/CDCgov/hl7-mmg-validator-ktor
