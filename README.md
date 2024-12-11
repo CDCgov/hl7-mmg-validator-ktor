@@ -29,6 +29,7 @@ Gradle to clean, build, and run.
 
 ### Local Endpoints 
 [GET] http://127.0.0.1:8080
+
 [POST] http://127.0.0.1:8080/validate 
 
 ### POST Example

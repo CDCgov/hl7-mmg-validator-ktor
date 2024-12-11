@@ -10,11 +10,12 @@ interface LoaderMmg {
 
     // ********************************************************************
     // TODO: Implement the logic to read the MMGs based on the parameters 
-    // see example here: 
+    // see example such as here: 
+    // https://github.com/CDCgov/data-exchange-hl7/blob/v0.0.24/local_libs/lib-dex-commons/src/main/kotlin/gov/cdc/dex/mmg/MmgUtil.kt#L54
     // ********************************************************************
     fun getMMGs(
-        genVProfile: String,
-        conditionProfile: String,
+        genVProfile: String,        // Generic Version Profile 
+        conditionProfile: String,   // Condition Version Profile    
         eventCode: String,
         jurisdictionCode: String
     ): Array<MMG> 
@@ -34,7 +35,8 @@ class LoaderMmgImpl : LoaderMmg {
         println("Looking for MMGs with the following parameters: genVProfile: $genVProfile, conditionProfile: $conditionProfile, eventCode: $eventCode, jurisdictionCode: $jurisdictionCode")
         // ********************************************************************
         // TODO: Implement the logic to return the needed MMGs based on the parameters 
-        // see example here: 
+        // see example such as here: 
+        // https://github.com/CDCgov/data-exchange-hl7/blob/v0.0.24/local_libs/lib-dex-commons/src/main/kotlin/gov/cdc/dex/mmg/MmgUtil.kt#L54
         // ********************************************************************
         println("Loading GenV2 MMG available from local file...")
 
