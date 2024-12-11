@@ -26,9 +26,8 @@ class MmgValidator(private val loaderMmg: LoaderMmg, private val loaderVocab: Lo
     }// .companion object 
 
     fun validate(hl7Message: String): List<ValidationIssue> {
-        // val mmgs = getMMGFromMessage(hl7Message)
-        val mmg = loaderMmg.getGenV2Mmg()
-        val mmgs = arrayOf<MMG>(mmg)
+
+        val mmgs = getMMGFromMessage(hl7Message)
 
         val report = mutableListOf<ValidationIssue>()
 
@@ -390,32 +389,33 @@ class MmgValidator(private val loaderMmg: LoaderMmg, private val loaderVocab: Lo
         return line
     }// .getLineNumber
 
-    // fun getMMGFromMessage(message: String): Array<MMG> {
-    //     val genVProfile = this.extractValue(message, GENVx_PROFILE_PATH).trim()
-    //     val conditionProfile = this.extractValue(message, CONDITION_PROFILE_PATH).trim()
-    //     val eventCode = this.extractValue(message, EVENT_CODE_PATH).trim()
-    //     var jurisdictionCode = this.extractValue(message,REPORTING_JURISDICTION_PATH).trim()
-    //     if (jurisdictionCode.isEmpty()) {
-    //         jurisdictionCode = this.extractValue(message, ALT_REPORTING_JURISDICTION_PATH).trim()
-    //     }
-    //     logger.info("Profiles for Message --> GenV2: $genVProfile, Condition Specific: $conditionProfile, Event Code:$eventCode")
-    //     if (eventCode.isEmpty()) {
-    //         throw NoSuchElementException("Field $EVENT_CODE_PATH Event Code is missing.")
-    //     }
-    //     if (genVProfile.isEmpty()) {
-    //         throw NoSuchElementException("Field $GENVx_PROFILE_PATH Message Profile is missing.")
-    //     }
-    //     if (jurisdictionCode.isEmpty()) {
-    //         throw NoSuchElementException("Field Jurisdiction Code ($REPORTING_JURISDICTION_PATH or $ALT_REPORTING_JURISDICTION_PATH) is missing.")
-    //     }
-    //     return mmgUtil.getMMGs(genVProfile, conditionProfile, eventCode, jurisdictionCode)
-    // }// .getMMGFromMessage
+    fun getMMGFromMessage(message: String): Array<MMG> {
 
-    // private fun extractValue(msg: String, path: String):String  {
-    //     val value = HL7StaticParser.getFirstValue(msg, path)
-    //     return if (value.isDefined) value.get() //throw InvalidMessageException("Error extracting $path from HL7 message")
-    //     else ""
-    // }// .extractValue
+        val genVProfile = this.extractValue(message, GENVx_PROFILE_PATH).trim()
+        val conditionProfile = this.extractValue(message, CONDITION_PROFILE_PATH).trim()
+        val eventCode = this.extractValue(message, EVENT_CODE_PATH).trim()
+        var jurisdictionCode = this.extractValue(message,REPORTING_JURISDICTION_PATH).trim()
+        if (jurisdictionCode.isEmpty()) {
+            jurisdictionCode = this.extractValue(message, ALT_REPORTING_JURISDICTION_PATH).trim()
+        }
+        // logger.info("Profiles for Message --> GenV2: $genVProfile, Condition Specific: $conditionProfile, Event Code:$eventCode")
+        if (eventCode.isEmpty()) {
+            throw NoSuchElementException("Field $EVENT_CODE_PATH Event Code is missing.")
+        }
+        if (genVProfile.isEmpty()) {
+            throw NoSuchElementException("Field $GENVx_PROFILE_PATH Message Profile is missing.")
+        }
+        if (jurisdictionCode.isEmpty()) {
+            throw NoSuchElementException("Field Jurisdiction Code ($REPORTING_JURISDICTION_PATH or $ALT_REPORTING_JURISDICTION_PATH) is missing.")
+        }
+        return loaderMmg.getMMGs(genVProfile, conditionProfile, eventCode, jurisdictionCode)
+    }// .getMMGFromMessage
+
+    private fun extractValue(msg: String, path: String):String  {
+        val value = HL7StaticParser.getFirstValue(msg, path)
+        return if (value.isDefined) value.get() //throw InvalidMessageException("Error extracting $path from HL7 message")
+        else ""
+    }// .extractValue
 
 
 } // .MmgValidator

@@ -8,23 +8,35 @@ import com.google.gson.reflect.TypeToken
 // Interface
 interface LoaderMmg {
 
-    // Used for example only
-    fun getGenV2Mmg(): MMG
-
-    // TODO: this is needed for the MMG validation 
-    // fun getMMGs(
-    //     genVProfile: String,
-    //     conditionProfile: String,
-    //     eventCode: String,
-    //     jurisdictionCode: String
-    // ): List<MMG> 
+    // ********************************************************************
+    // TODO: Implement the logic to read the MMGs based on the parameters 
+    // see example here: 
+    // ********************************************************************
+    fun getMMGs(
+        genVProfile: String,
+        conditionProfile: String,
+        eventCode: String,
+        jurisdictionCode: String
+    ): Array<MMG> 
 
 }// .LoaderMmg
 
 // Implementation read MMG from local file read
 class LoaderMmgImpl : LoaderMmg {
 
-    override fun getGenV2Mmg(): MMG {
+    override fun getMMGs(       
+        genVProfile: String,
+        conditionProfile: String,
+        eventCode: String,
+        jurisdictionCode: String
+        ): Array<MMG> {
+
+        println("Looking for MMGs with the following parameters: genVProfile: $genVProfile, conditionProfile: $conditionProfile, eventCode: $eventCode, jurisdictionCode: $jurisdictionCode")
+        // ********************************************************************
+        // TODO: Implement the logic to return the needed MMGs based on the parameters 
+        // see example here: 
+        // ********************************************************************
+        println("Loading GenV2 MMG available from local file...")
 
         // Read the resource file from the classpath
         val resourcePath = "mmgs/generic_version_2_0_1.json"
@@ -36,7 +48,7 @@ class LoaderMmgImpl : LoaderMmg {
         val mmg = Gson().fromJson(fileContent, MMG::class.java)
         // println("Deserialized MMG: $mmg")
 
-        return mmg 
-    }// .getGenV2Mmg 
+        return arrayOf<MMG>(mmg)
+    }// .getMMGs 
 
 }// .LoaderMmgImpl 

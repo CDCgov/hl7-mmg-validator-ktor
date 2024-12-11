@@ -4,7 +4,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-// Interface
+
+// ********************************************************************
+// TODO: Implement the logic to check against the real vocabulary 
+// ********************************************************************
 interface LoaderVocab {
 
     fun entryExists(vocabKey: String, code: String): Boolean
@@ -38,6 +41,10 @@ object VocabSingleton {
     }// .getVocab
 }// .VocabSingleton
 
+
+// ********************************************************************
+// TODO: Implement the logic to check against the real vocabulary 
+// ********************************************************************
 // Implementation
 class LoaderVocabImpl : LoaderVocab {
 

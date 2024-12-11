@@ -22,28 +22,28 @@ fun Application.configureRouting() {
         post("/validate") {
 
             // *************************************************************************
-            // Dependency 1: Get the respective MMG as needed from the message
+            // Dependency 1: Gets the respective MMGs as needed from the message
+            // TODO: Implement the logic to read the MMGs based on the parameters 
+            // and make all the MMGs available
             // *************************************************************************
             val loaderMmg: LoaderMmg = LoaderMmgImpl()
 
             // *************************************************************************
-            // Dependency 2: Get the PhinVads Vocab
+            // Dependency 2: Based on the PhinVads vocabulary can check HL7 message content
+            // TODO: Implement the logic to check against the real vocabulary
             // *************************************************************************
             val loaderVocab: LoaderVocab = LoaderVocabImpl()
           
-
             try {
-                // val mmgJson = loaderMmg.getMmg(mmgType)
-                // val vocabList = loaderVocab.getVocabOnce()
 
                 // *************************************************************************
-                // Read the body of the POST request as text
+                // Read the body of the POST request as text, this should be the HL7 message
                 // *************************************************************************
                 val hl7Text = call.receiveText()
                 log.info("Received body: $hl7Text")
 
                 // *************************************************************************
-                // Load the MMG Validator with dependencies 1 and 2
+                // Load the MMG Validator with Dependency: 1. (loaderMmg) and 2. (loaderVocab)
                 // *************************************************************************
                 val validatorMmg = MmgValidator(loaderMmg, loaderVocab)
 
