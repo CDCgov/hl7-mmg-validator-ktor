@@ -1,7 +1,7 @@
 # HL7 MMG Validator with Ktor (Example)
 Example of HL7 MMG validation
 
-## Repo Summary
+## Overview
 
 This repo code contains 4 major parts:
 
